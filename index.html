@@ -615,8 +615,8 @@
     }
 
     .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 22px 50px rgba(0, 0, 0, 0.9);
+      /* Removed upward movement and heavy shadow to keep layout stable on hover.
+         Retain subtle color/border change for visual feedback. */
       border-color: rgba(245, 178, 72, 0.45);
       background: radial-gradient(circle at top, #1f2534, #050608 60%);
     }
@@ -1178,6 +1178,120 @@
         min-height: auto;
       }
     }
+
+    /* PRODUCT DETAILS MODAL */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      /* lighter overlay for improved readability */
+      background: rgba(70, 70, 70, 0.28);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 60;
+      padding: 1.2rem;
+      backdrop-filter: blur(3px);
+    }
+
+    .modal-overlay.open { display: flex; }
+
+    .modal {
+      width: 100%;
+      max-width: 800px;
+      max-height: 90vh;
+      /* slightly more translucent modal to let background breathe */
+      background: rgba(2, 43, 55, 0.774);
+      border-radius: 14px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid rgba(255,255,255,0.045);
+      box-shadow: 0 14px 36px rgba(0,0,0,0.28);
+      color: var(--text-main);
+      backdrop-filter: saturate(1.06) blur(2px);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.9rem 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .modal-header .meta {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    .modal-body {
+      padding: 1rem;
+      overflow: auto;
+      color: var(--text-main);
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 1rem;
+    }
+
+    .modal-gallery {
+      display: block;
+    }
+
+    .main-image-container {
+      position: relative;
+      width: 100%;
+      height: 320px;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #081016;
+    }
+
+    .main-image {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 10px;
+      opacity: 0;
+      transition: opacity 520ms ease-in-out;
+      will-change: opacity;
+    }
+
+    .main-image.visible { opacity: 1; }
+
+    .modal-details h3 { margin-top: 0; }
+
+    .modal-details .pill-row { margin: 0.6rem 0; display:flex; gap:0.5rem; flex-wrap:wrap; }
+
+    .modal-footer {
+      padding: 0.8rem 1rem;
+      border-top: 1px solid rgba(255,255,255,0.04);
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:1rem;
+      background: linear-gradient(180deg, rgba(255,255,255,0.01), transparent);
+    }
+
+    .modal .close-btn {
+      appearance: none;
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.06);
+      color: var(--text-muted);
+      width:36px;
+      height:36px;
+      border-radius:8px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+    }
+
+    @media (max-width: 880px) {
+      .modal-body { grid-template-columns: 1fr; }
+      .modal-gallery .main-image { height:220px; }
+    }
   </style>
 </head>
 <body>
@@ -1329,39 +1443,46 @@
               <span class="bar"></span>
               Product Range
             </div>
-            <!-- <p class="section-subtitle">
-              Configure pavements for every loading and aesthetic requirement—from residential courtyards to container yards
-              and airport apron zones.
-            </p> -->
+            
           </div>
 
           <div class="card-grid horizontal-scroll">
-            <!-- Paving Blocks -->
-            <article class="card">
-              <div class="card-kicker">Paving Blocks • 60–120mm</div>
-              <h3>The Modulars</h3>
-              <p>
-                Interlocking modules in multiple sizes and laying patterns, engineered for mixed-use streets, driveways &amp; plazas.
+            <!-- Paving Blocks (condensed card content) -->
+            <article class="card" data-images="7. ZigZag Red.png,20. Cheker Tile Yellow Cross.png"
+                     data-modal-title="ZIG-ZAG — Heavy-Duty Interlock"
+                     data-modal-kicker="PAVER BLOCK — 40–80 MM (MODAL)"
+                     data-modal-desc="<strong>MODAL CONTENT:</strong> This detailed modal description is intentionally different from the outer card. It contains technical specs, suggested mix designs, recommended uses and maintenance tips to help you evaluate the product clearly."
+                     data-modal-pills="Colour fast pigments|Recommended: M40 mix"
+                     data-modal-footer="Modal: Built to last and easy to maintain. Call us for full details and pricing!"
+                     data-modal-images="7. ZigZag Red.png,20. Cheker Tile Yellow Cross.png,10. Max Red.jpg">
+              <div class="card-kicker">PAVER BLOCK • 40–80 MM</div>
+              <h3>ZIG-ZAG</h3>
+              <p class="card-brief">
+                The Unique Pattern Provides Superior Strength and Stability for Driveways, Walkways, And Patios.
               </p>
               <div class="pill-row">
-                <div class="pill">IS:15658 compliant</div>
-                <div class="pill">M30–M50 grades</div>
+                <div class="pill">COLOUR FAST PIGMENTS</div>
               </div>
               <div class="card-footer">
-                <span>Best for townships &amp; urban plazas</span>
-                <span class="cta">View details ↗</span>
+                <span>Suitable for heavy-duty places such as petrol pumps, roads.</span>
+                <!-- <span class="cta">View details ↗</span> -->
               </div>
             </article>
 
-            <article class="card">
-              <div class="card-kicker">Paving Blocks • 60–80mm</div>
-              <h3>Reflectives</h3>
-              <p>
-                High-lustre pavers in contemporary colours for malls, hospitality, retail promenades and premium parking lots.
+            <article class="card" data-images="4. Cosmos Red.png,10. Max Red.jpg"
+                     data-modal-title="REFLECTIVES — High-Lustre Finish"
+                     data-modal-kicker="PAVER BLOCK — 60–80 MM (MODAL)"
+                     data-modal-desc="<strong>MODAL CONTENT:</strong> High-lustre reflective finish details, recommended sealants, and deployment examples for plazas and premium parking. Includes cleaning & polishing notes."
+                     data-modal-pills="Colour-fast pigments|Low porosity"
+                     data-modal-footer="Modal: Ideal for high-visibility public spaces; contact for sample tiles."
+                     data-modal-images="4. Cosmos Red.png,10. Max Red.jpg,1. Brick Red.png">
+              <div class="card-kicker">PAVER BLOCK • 60–80 MM</div>
+              <h3>REFLECTIVES</h3>
+              <p class="card-brief">
+                High-lustre pavers in contemporary colours delivering long-lasting finish for promenades and premium parking.
               </p>
               <div class="pill-row">
-                <div class="pill">Colour-fast pigments</div>
-                <div class="pill">Low porosity</div>
+                <div class="pill">COLOUR FAST PIGMENTS</div>
               </div>
               <div class="card-footer">
                 <span>Ideal for malls &amp; hotels</span>
@@ -1369,35 +1490,45 @@
               </div>
             </article>
 
-            <article class="card">
-              <div class="card-kicker">Heavy Duty • 80–120mm</div>
-              <h3>Sturdy Series</h3>
-              <p>
-                High-load paver systems for ports, industrial yards, petrol pumps, logistics parks &amp; container terminals.
+            <article class="card" data-images="16. Cheker Tile Yellow 36 Ball.jpg,18. Cheker Tile Yellow 25 Sq.png"
+                     data-modal-title="STURDY SERIES — Industrial Grade"
+                     data-modal-kicker="HEAVY DUTY — 80–120 MM (MODAL)"
+                     data-modal-desc="<strong>MODAL CONTENT:</strong> Engineered mix properties, load capacity figures, and QA checkpoints for heavy-duty applications (ports, container yards, fuel stations)."
+                     data-modal-pills="High abrasion resistance|Traction enhanced"
+                     data-modal-footer="Modal: Designed for extreme loads — request technical datasheet."
+                     data-modal-images="16. Cheker Tile Yellow 36 Ball.jpg,18. Cheker Tile Yellow 25 Sq.png,13. Domrup Yellow.png">
+              <div class="card-kicker">HEAVY DUTY • 80–120 MM</div>
+              <h3>STURDY SERIES</h3>
+              <p class="card-brief">
+                Engineered for extreme loads — ports, industrial yards and vehicle-intensive sites.
               </p>
               <div class="pill-row">
-                <div class="pill">High abrasion resistance</div>
-                <div class="pill">For forklifts &amp; trailers</div>
+                <div class="pill">HIGH ABRASION RESISTANCE</div>
               </div>
               <div class="card-footer">
-                <span>Designed for extreme loads</span>
+                <span>Designed for forklifts, trailers &amp; heavy traffic</span>
                 <span class="cta">View details ↗</span>
               </div>
             </article>
 
-            <article class="card">
-              <div class="card-kicker">Eco • 60–80mm</div>
-              <h3>Grass Pavers &amp; Grids</h3>
-              <p>
-                Permeable grid systems that allow grass growth, balancing load distribution with soft landscape aesthetics.
+            <article class="card" data-images="13. Domrup Yellow.png,1. Brick Red.png"
+                     data-modal-title="GRASS PAVERS & GRIDS — Permeable System"
+                     data-modal-kicker="ECO — 60–80 MM (MODAL)"
+                     data-modal-desc="<strong>MODAL CONTENT:</strong> Permeable grid system details, load-bearing guidelines, planting recommendations and drainage performance notes."
+                     data-modal-pills="Stormwater friendly|Permeable paving"
+                     data-modal-footer="Modal: Great for landscape parking and sustainable sites. Contact for CAD drawings."
+                     data-modal-images="13. Domrup Yellow.png,1. Brick Red.png,4. Cosmos Red.png">
+              <div class="card-kicker">ECO • 60–80 MM</div>
+              <h3>GRASS PAVERS &amp; GRIDS</h3>
+              <p class="card-brief">
+                Permeable grid systems that allow grass growth while providing structural support for light traffic.
               </p>
               <div class="pill-row">
-                <div class="pill">Permeable paving</div>
-                <div class="pill">Stormwater friendly</div>
+                <div class="pill">STORMWATER FRIENDLY</div>
               </div>
               <div class="card-footer">
-                <span>Perfect for open parking</span>
-                <span class="cta">View details ↗</span>
+                <span>Perfect for open parking &amp; landscape areas</span>
+                <!-- <span class="cta">View details ↗</span> -->
               </div>
             </article>
           </div>
@@ -1410,6 +1541,191 @@
               Request full product catalogue
             </button>
           </div>
+          <!-- Product details modal -->
+          <div id="productModal" class="modal-overlay" aria-hidden="true">
+            <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+              <div class="modal-header">
+                <div>
+                  <div class="modal-kicker meta" id="modalKicker"></div>
+                  <h3 id="modalTitle"></h3>
+                </div>
+                <div style="display:flex;align-items:center;gap:0.6rem;">
+                  <button class="close-btn" id="modalClose" title="Close">✕</button>
+                </div>
+              </div>
+
+              <div class="modal-body">
+                <div class="modal-gallery">
+                  <div class="main-image-container" id="mainImageContainer">
+                    <img src="" alt="Product image" class="main-image visible" id="modalImageA">
+                    <img src="" alt="Product image" class="main-image" id="modalImageB">
+                  </div>
+                </div>
+
+                <div class="modal-details">
+                  <div class="pill-row" id="modalPills"></div>
+                  <p id="modalDesc"></p>
+                  <div style="margin-top:1rem;color:var(--text-muted);" id="modalExtra"></div>
+                </div>
+              </div>
+
+              <div class="modal-footer">
+                <span id="modalFooterText"></span>
+                <div>
+                  <button class="btn-primary" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Get a Quote</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <script>
+            (function(){
+              const modalOverlay = document.getElementById('productModal');
+              const modalClose = document.getElementById('modalClose');
+              const modalKicker = document.getElementById('modalKicker');
+              const modalTitle = document.getElementById('modalTitle');
+              const modalDesc = document.getElementById('modalDesc');
+              const modalPills = document.getElementById('modalPills');
+              const modalFooterText = document.getElementById('modalFooterText');
+
+              const imgA = document.getElementById('modalImageA');
+              const imgB = document.getElementById('modalImageB');
+              const mainImageContainer = document.getElementById('mainImageContainer');
+
+              let currentImages = [];
+              let currentIndex = 0;
+              let autoScrollTimer = null;
+              let interactionPaused = false;
+              let visibleA = true;
+
+              function setImageWithFade(src, alt){
+                const from = visibleA ? imgA : imgB;
+                const to = visibleA ? imgB : imgA;
+                to.src = src;
+                to.alt = alt || '';
+                // trigger crossfade
+                to.classList.add('visible');
+                from.classList.remove('visible');
+                visibleA = !visibleA;
+              }
+
+              function goToIndex(idx){
+                if(!currentImages || currentImages.length === 0) return;
+                currentIndex = (idx + currentImages.length) % currentImages.length;
+                const src = currentImages[currentIndex];
+                setImageWithFade(src, modalTitle.textContent || '');
+              }
+
+              function startAutoScroll(){
+                stopAutoScroll();
+                if(!currentImages || currentImages.length <= 1) return;
+                autoScrollTimer = setInterval(()=>{
+                  if(interactionPaused) return;
+                  goToIndex(currentIndex + 1);
+                }, 4200);
+              }
+
+              function stopAutoScroll(){ if(autoScrollTimer){ clearInterval(autoScrollTimer); autoScrollTimer = null; } }
+
+              function openModalFromCard(card){
+                // Prefer explicit modal fields set on the card via data-modal-* attributes.
+                // This allows outer card content to differ from modal details.
+                const kicker = card.dataset.modalKicker || card.querySelector('.card-kicker')?.textContent || '';
+                const title = card.dataset.modalTitle || card.querySelector('h3')?.textContent || '';
+
+                // description: prefer `data-modal-desc`, then `.card-desc` or `.card-brief`, then any <p>
+                const desc = card.dataset.modalDesc || card.querySelector('p.card-desc')?.innerHTML || card.querySelector('p.card-brief')?.innerHTML || card.querySelector('p')?.innerHTML || '';
+
+                // pills: allow `data-modal-pills` as pipe-separated list, otherwise gather visible pills
+                let pills = [];
+                if(card.dataset.modalPills){
+                  pills = card.dataset.modalPills.split('|').map(s=>s.trim()).filter(Boolean);
+                } else {
+                  pills = Array.from(card.querySelectorAll('.pill')).map(n=>n.textContent.trim());
+                }
+
+                const footerSpan = card.dataset.modalFooter || card.querySelector('.card-footer span')?.textContent || '';
+
+                // images: prefer `data-modal-images` else fallback to `data-images`
+                const imagesAttr = card.dataset.modalImages || card.dataset.images;
+                let images = [];
+                if(imagesAttr) images = imagesAttr.split(',').map(s=>s.trim()).filter(Boolean);
+                if(images.length === 0) images = [ '1. Brick Red.png','4. Cosmos Red.png','7. ZigZag Red.png' ];
+
+                modalKicker.textContent = kicker;
+                modalTitle.textContent = title;
+                modalDesc.innerHTML = desc;
+                modalFooterText.textContent = footerSpan;
+
+                // pills
+                modalPills.innerHTML = '';
+                pills.forEach(p=>{ const d = document.createElement('div'); d.className = 'pill'; d.textContent = p; modalPills.appendChild(d); });
+
+                // setup images
+                currentImages = images.slice();
+                currentIndex = 0;
+                visibleA = true;
+                imgA.src = currentImages[0]; imgA.alt = title; imgA.classList.add('visible');
+                imgB.src = '' ; imgB.classList.remove('visible');
+
+                modalOverlay.classList.add('open');
+                modalOverlay.setAttribute('aria-hidden','false');
+                document.body.style.overflow = 'hidden';
+
+                startAutoScroll();
+              }
+
+              function closeModal(){ stopAutoScroll(); interactionPaused = false; currentImages = []; modalOverlay.classList.remove('open'); modalOverlay.setAttribute('aria-hidden','true'); document.body.style.overflow = ''; }
+
+              // attach click handlers to product cards
+              document.querySelectorAll('.card-grid.horizontal-scroll .card').forEach(card=>{
+                card.style.cursor = 'pointer';
+                card.addEventListener('click', (e)=>{
+                  if(e.target.closest('a') || e.target.closest('button')) return;
+                  openModalFromCard(card);
+                });
+              });
+
+              modalClose.addEventListener('click', closeModal);
+              modalOverlay.addEventListener('click', (e)=>{ if(e.target === modalOverlay) closeModal(); });
+              window.addEventListener('keydown', (e)=>{
+                if(e.key === 'Escape') return closeModal();
+                if(e.key === 'ArrowLeft'){ goToIndex(currentIndex-1); interactionPaused = true; setTimeout(()=>interactionPaused=false,900); }
+                if(e.key === 'ArrowRight'){ goToIndex(currentIndex+1); interactionPaused = true; setTimeout(()=>interactionPaused=false,900); }
+              });
+
+              // pause on hover / focus
+              modalOverlay.addEventListener('mouseenter', ()=>{ interactionPaused = true; });
+              modalOverlay.addEventListener('mouseleave', ()=>{ interactionPaused = false; });
+
+              // touch / swipe handling on image container
+              (function addSwipe(){
+                let startX = 0, startY = 0, startTime = 0, touching = false;
+                mainImageContainer.addEventListener('touchstart', (e)=>{
+                  if(!e.touches || e.touches.length === 0) return;
+                  touching = true; interactionPaused = true; stopAutoScroll();
+                  startX = e.touches[0].clientX; startY = e.touches[0].clientY; startTime = Date.now();
+                }, {passive:true});
+
+                mainImageContainer.addEventListener('touchend', (e)=>{
+                  if(!touching) return; touching = false;
+                  const dx = (e.changedTouches && e.changedTouches[0]) ? e.changedTouches[0].clientX - startX : 0;
+                  const dy = (e.changedTouches && e.changedTouches[0]) ? e.changedTouches[0].clientY - startY : 0;
+                  const dt = Date.now() - startTime;
+                  if(Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) && dt < 800){
+                    if(dx < 0) goToIndex(currentIndex+1); else goToIndex(currentIndex-1);
+                  }
+                  setTimeout(()=>{ interactionPaused = false; startAutoScroll(); }, 600);
+                }, {passive:true});
+
+                // mouse drag for desktop
+                let dragging = false; let mStartX = 0;
+                mainImageContainer.addEventListener('mousedown', (e)=>{ dragging = true; interactionPaused = true; stopAutoScroll(); mStartX = e.clientX; e.preventDefault(); });
+                window.addEventListener('mousemove', (e)=>{ if(!dragging) return; });
+                window.addEventListener('mouseup', (e)=>{ if(!dragging) return; dragging=false; const dx = e.clientX - mStartX; if(Math.abs(dx) > 60){ if(dx < 0) goToIndex(currentIndex+1); else goToIndex(currentIndex-1); } setTimeout(()=>{ interactionPaused=false; startAutoScroll(); }, 600); });
+              })();
+            })();
+          </script>
         </div>
       </section>
 
